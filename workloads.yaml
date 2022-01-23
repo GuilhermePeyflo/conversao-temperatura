@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firstdeployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web-conversao
+  template:
+    metadata:
+      labels:
+        app: web-conversao
+    spec:
+      containers:
+      - name: web-conversao
+        image: peyflo/conversao-temperatura:v1
+        resources:
+          limits:
+            memory: "64Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-conversao
+spec:
+  selector:
+    app: web-conversao
+  ports:
+  - protocol: TCP
+    port: 8080
+    nodePort: 30000
+  type: NodePort 
+
